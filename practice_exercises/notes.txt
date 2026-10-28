@@ -1,0 +1,4 @@
+Line 1: files store data after the program ends
+Line 2: with open() closes the file automatically
+Line 3: mode 'w' replaces old content
+Line 4: mode 'a' appends to the end

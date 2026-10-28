@@ -1,0 +1,14 @@
+[
+    {
+        "description": "Lunch",
+        "amount": 180.0
+    },
+    {
+        "description": "Bus ticket",
+        "amount": 35.5
+    },
+    {
+        "description": "Notebook",
+        "amount": 60.0
+    }
+]
