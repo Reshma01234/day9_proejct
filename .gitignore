@@ -1,0 +1,5 @@
+# Runtime data created by the app (private to each user) - not committed
+expenses.json
+expenses.json.tmp
+__pycache__/
+*.pyc

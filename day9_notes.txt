@@ -1,0 +1,49 @@
+DAY 9 NOTES - File Handling & Data Persistence with JSON
+Reshma | AhamVerse Python Development
+
+1. WHAT I LEARNED
+- File modes: r reads, w writes and replaces, a appends, x creates and fails if the file exists.
+- with open(path, mode, encoding="utf-8") closes the file automatically, even if an error happens.
+- json.dump(data, file) writes Python data to an open file as JSON; json.load(file) reads it back.
+- A missing file (FileNotFoundError) and a damaged file (json.JSONDecodeError) are different
+  situations and need different handling.
+- Data that is only in a list disappears when the program ends; saving to a file keeps it.
+
+2. FILE PATH USED
+- The data file is expenses.json in the project root, next to the expense_tracker folder:
+      day9_project/expenses.json
+- The path is built from storage.py's own location (Path(__file__)), so the file is always created
+  in the same place, whichever folder the program is started from.
+- Saving writes to expenses.json.tmp first and then replaces expenses.json, so a failed save cannot
+  leave a half-written file.
+
+3. HOW MISSING / CORRUPTED FILES ARE HANDLED
+- Missing file (first run): treated as "no expenses yet". The app starts with an empty list, no
+  traceback, and the file is created the first time an expense is saved.
+- Invalid JSON (including an empty file): the app prints a clear error with the file path, says the
+  file has NOT been changed, and exits. It does not replace the data with an empty list.
+- Valid JSON with the wrong shape (for example a dictionary, or a record with a blank description or
+  a negative amount): refused the same way, file not changed.
+- Other file errors when reading (OSError, e.g. permissions): clear message, file not changed.
+- If saving fails (OSError): a warning is shown, the expense stays in memory for the session, and
+  the app keeps running.
+- Validation rule: description not blank; amount numeric, finite and not negative. Zero is accepted.
+
+4. WHY storage.py
+- Loading and saving are file concerns, separate from validation (validation.py), expense
+  operations (expenses.py) and the menu (main.py). expenses.py stays free of file code and can
+  be reused or tested without touching a file. main.py decides what to show the user when loading
+  or saving fails.
+
+5. ONE ISSUE I ENCOUNTERED AND FIXED
+- Issue: if the data file path is just "expenses.json", Python resolves it from the current
+  working directory, so running the app from a different folder would create or look for a
+  different expenses.json and the saved expenses would appear to be lost.
+- Fix: build the path from the module's own location, in storage.py:
+      DATA_FILE = Path(__file__).resolve().parent.parent / "expenses.json"
+  Test "Extra A" in test_scenarios.py checks that the data file is not created in the
+  current folder.
+
+6. GIT CHOICE
+- The live expenses.json is ignored (.gitignore) because it is runtime data that may be personal.
+- A clean example of the file format is committed as expenses.sample.json.
